@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "562974007064",
+    "project_id": "ntretaime",
+    "storage_bucket": "ntretaime.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562974007064:android:33a0d6cf556a5df9ebc86d",
+        "android_client_info": {
+          "package_name": "com.example.recycleruve"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "562974007064-lbqh6t9ojquqpbeljtfh8obnbd68a8dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWPasHqMJnu_UNjALszT6x-lAR_2M9vD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "562974007064-lbqh6t9ojquqpbeljtfh8obnbd68a8dl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
