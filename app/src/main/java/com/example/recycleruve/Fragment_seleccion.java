@@ -1,25 +1,23 @@
 package com.example.recycleruve;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 
@@ -29,6 +27,10 @@ public class Fragment_seleccion extends Fragment {
     private HashMap<String, ArrayList<Pelicula> > mapaPeliculas = new HashMap<String, ArrayList<Pelicula> >();
     private SearchView searchView;
     private RecyclerAdapter myAdapter;
+
+    public Fragment_seleccion(){
+
+    }
 
     //esete es el constructor que le paso el hashMap con las listas y el contexto para mis movidas.
     public Fragment_seleccion(Context context, HashMap<String, ArrayList<Pelicula> > mapaPeliculas){
@@ -105,13 +107,14 @@ public class Fragment_seleccion extends Fragment {
         }
         //una vez terminado el proceso veremos si el hasmap esta vacio o no. En caso de que si mostrara un mensaje de que no se pudo encontrar.
         if (mapafiltrado.size()==0) {
-            Toast.makeText(context,"No could found it", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),"No could found it", Toast.LENGTH_LONG).show();
 
         }else{
             //en caso de que se encontro se seteara el nuevo hasmap en el Recycler adpter que yo cree.
             this.myAdapter.setFilterlist(mapafiltrado);
         }
     }
+
 
 
 }

@@ -1,26 +1,41 @@
 package com.example.recycleruve;
 
+import static android.content.ContentValues.TAG;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.app.ActionBar;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+    private Usuario user = new Usuario();
+    private ImageView pfLogo;
+
     //Atributos
     private HashMap<String, ArrayList<Pelicula> > mapaPeliculas = new HashMap<String, ArrayList<Pelicula> >();
 
@@ -33,17 +48,50 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseFirestore mFire= FirebaseFirestore.getInstance();
+        //Query query = mFire.collection("");
+        ArrayList<Pelicula>peliculas = new ArrayList<>();
+        mFire.collection("Peliculas").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Pelicula p = documentSnapshot.toObject(Pelicula.class);
+                            addPeli(p.getCategory(),p);
+                            peliculas.add(p);
+                            System.out.println(p.getNombre());
+                            System.out.println(mapaPeliculas.size());
+                        }
+
+                    }
+
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error getting documents.", e);
+                    }
+                });
         //getActionBar().hide();
         //para versiones recientes esto es mejor bb.
         getSupportActionBar().hide();
 
-        //esto es para el splash para que quede rexulon
-        Intent i = new Intent(MainActivity.this, SplashActivity.class);
+        //Intent splas = new Intent(getBaseContext(), SplashActivity.class);
+        //startActivity(splas);
+
+
+
+        Intent i = new Intent(getBaseContext(), LoginActivity.class);
         startActivity(i);
 
 
+
+
         //aqui cargo las pelis y las colas con sus nombres si estan repetidas o no y las añado.
-        addPeli("Acction",new Pelicula("Cobra kai", "https://es.web.img2.acsta.net/pictures/21/01/04/12/12/0170975.jpg", "CfOuYm8EnBA", "Action"));
+        //addPeli("Acction",new Pelicula("Cobra kai", "https://es.web.img2.acsta.net/pictures/21/01/04/12/12/0170975.jpg", "CfOuYm8EnBA", "Action"));
+        /*
+
         addPeli("Acction", new Pelicula("The umbrella acedemy", "https://es.web.img3.acsta.net/r_1280_720/pictures/20/06/30/09/27/0936610.jpg", "vhSoMI1DPrA", "Action"));
         addPeli("Acction",new Pelicula("Vikings", "https://www.ecartelera.com/carteles-series/100/127/006_p.jpg", "8Co0o5V8WA4", "Action"));
         addPeli("Acction",new Pelicula("The wicher", "https://cdn.grupoelcorteingles.es/SGFM/dctm/MEDIA03/202102/08/00183110707896____1__640x640.jpg", "66UlOXnyQmo", "Action"));
@@ -62,14 +110,24 @@ public class MainActivity extends AppCompatActivity {
         addPeli("Romance",new Pelicula("Sex Education", "https://es.web.img2.acsta.net/pictures/20/01/08/09/31/0501142.jpg", "WSXMGu_9PK8", "Romance"));
         addPeli("Romance",new Pelicula("Propuesta laboral", "https://es.web.img3.acsta.net/pictures/22/02/14/17/12/4268762.jpg", "mh4R-WXRhQo", "Romance"));
 
+
+         */
         //Aqui llamo al fragmento que esta en el contenedor Framelayout que contiene el Recyclerview y el searchView  y le paso el hashmap y el contexto
-        Fragment_seleccion fragment_seleccion= new Fragment_seleccion(this, mapaPeliculas);
-        //aqui seteo el fragmento ya iniciado en el contenedor fragmento
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_seleccion).commit();
+
 
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Fragment_seleccion fragment_seleccion= new Fragment_seleccion(getBaseContext(), mapaPeliculas);
+        //aqui seteo el fragmento ya iniciado en el contenedor fragmento
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_seleccion).commit();
+        pfLogo= findViewById(R.id.logoPerfil);
+        Glide.with(getBaseContext()).load(user.getFotoPerfil()).into(pfLogo);
+
+    }
 
     //esta clase es interesante por que funciona con un hashmap que la key es la categoria y dentro del valor del hash tiene listas de peliculas.
     //Por que asi? por que en el caso de que ese categoria de peliculas ya existe la meto en su lista de peliculas en caso de que no se crea esa lista que contendra las peliculas
@@ -88,5 +146,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent
+            data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Uri mPath = data.getData();
+    }
 
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences datos= PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor miEditor=datos.edit();
+        miEditor.commit();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences datos= PreferenceManager.getDefaultSharedPreferences(this);
+
+
+    }
 }

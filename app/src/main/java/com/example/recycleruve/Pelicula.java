@@ -10,6 +10,7 @@ public class Pelicula {
     private String imagen;
     private String url;
     private String category;
+    private String timerStart;
 
     //constructor
     public Pelicula(String nombre, String imagen, String url, String category) {
@@ -17,6 +18,9 @@ public class Pelicula {
         this.imagen = imagen;
         this.url = url;
         this.category=category;
+    }
+    public Pelicula(){
+
     }
 
     //getYsetters
@@ -26,6 +30,22 @@ public class Pelicula {
 
     public String getImagen() {
         return imagen;
+    }
+
+    public String getTimerStart() {
+        return timerStart;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setTimerStart(String timerStart) {
+        this.timerStart = timerStart;
     }
 
     public String getUrl() {

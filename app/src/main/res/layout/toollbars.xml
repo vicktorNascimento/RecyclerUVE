@@ -7,16 +7,26 @@
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.Toolbar
-        android:layout_width="122dp"
+        android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
 
 
 
         <ImageView
             android:id="@+id/btn_xd"
-            android:layout_width="wrap_content"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:src="@drawable/logotipo_removebg_preview" />
+
+        <ImageView
+            android:id="@+id/logoPerfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="right"
+            android:src="@drawable/common_google_signin_btn_icon_light" />
+
+
 
 
     </androidx.appcompat.widget.Toolbar>

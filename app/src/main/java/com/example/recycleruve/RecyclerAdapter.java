@@ -24,6 +24,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Cancio
     public ArrayList<Pelicula> peliculas ;
     public FragmentManager fragmentManager;
     private HashMap<String, ArrayList<Pelicula> > mapaPeliculas;
+    public RecyclerAdapter(){
+
+    }
     //constructor. Para este se recibe el hasmap pero para el siguiente Recycler se recibe su lista.
     public RecyclerAdapter(HashMap<String, ArrayList<Pelicula> > mapaPeliculas, Context context, FragmentManager fragmentManager) {
 
@@ -113,7 +116,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Cancio
         }
 
 
+
+
+
     }
+
+
 
 
 }
